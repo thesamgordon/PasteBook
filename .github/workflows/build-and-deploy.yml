@@ -77,8 +77,8 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache-${{ matrix.component }}
           cache-to: type=local,dest=/tmp/.buildx-cache-${{ matrix.component }}-new,mode=max
           tags: |
-            ghcr.io/loudbooks/pastebook-${{ matrix.component }}:${{ env.tag }}
-            ghcr.io/loudbooks/pastebook-${{ matrix.component }}:${{ env.hash }}
+            ghcr.io/thesamgordon/pastebook-${{ matrix.component }}:${{ env.tag }}
+            ghcr.io/thesamgordon/pastebook-${{ matrix.component }}:${{ env.hash }}
 
       - name: Move updated Docker cache
         if: steps.check_changes.outputs.skip != 'true'
