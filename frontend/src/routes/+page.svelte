@@ -7,5 +7,5 @@
 </script>
 
 <Navbar editable={true} />
-<Content />
+<Content newPaste={true} />
 <Floater loadedLanguages={data.loadedLanguages} />

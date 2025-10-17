@@ -144,7 +144,7 @@
 		align-content: center;
 
 		@media (max-width: 650px) {
-			font-size: 2.2rem;
+			font-size: 2.1rem;
 		}
 	}
 

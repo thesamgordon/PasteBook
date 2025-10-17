@@ -21,7 +21,7 @@
     }
 }
 
-*:not(html) {
+*:not(html):not(span) {
     opacity: 0;
-    animation: fadein 0.3s ease forwards;
+    animation: fadein 0.2s ease forwards;
 }

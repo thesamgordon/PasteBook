@@ -29,7 +29,6 @@
         });
 
         showSuggestions = filteredOptions.length > 0;
-        onChange?.(input);
 
         hoveredIndex = 0;
     }
