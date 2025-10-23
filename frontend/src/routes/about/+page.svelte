@@ -16,7 +16,7 @@
 </div>
 
 <p id="footer">
-    <a href="https://github.com/Loudbooks/PasteBook" target="_blank" aria-label="button">pastebook</a>@<a href="https://github.com/Loudbooks/PasteBook/commit/{commitHash}" target="_blank" aria-label="button">{commitHash}</a>
+    <a href="https://github.com/thesamgordon/PasteBook" target="_blank" aria-label="button">pastebook</a>@<a href="https://github.com/thesamgordon/PasteBook/commit/{commitHash}" target="_blank" aria-label="button">{commitHash}</a>
 </p>
 
 <style lang="scss">
