@@ -24,7 +24,7 @@ async fn get_content(
     let ip = ip.clone();
     tokio::spawn(async move {
         if let Err(err) = postgres_service_clone.increment_requests(&ip).await {
-            log::error!("Failed to increment requests: {}", err);
+            tracing::error!("Failed to increment requests: {}", err);
         }
     });
 
@@ -66,12 +66,12 @@ async fn get_metadata(
             let user = postgres_service.get_user(&metadata.creator_ip).await.unwrap();
             
             if user.ip != ip && metadata.burn {
-                log::trace!("Burning paste: {}", metadata.id);
+                tracing::trace!("Burning paste: {}", metadata.id);
                 let postgres_service_clone = Arc::clone(&postgres_service);
                 let id = metadata.id.clone();
                 tokio::spawn(async move {
                     if let Err(err) = postgres_service_clone.delete_paste(&id).await {
-                        log::error!("Failed to burn paste: {}", err);
+                        tracing::error!("Failed to burn paste: {}", err);
                     }
                 });
             }

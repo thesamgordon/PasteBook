@@ -2,7 +2,7 @@ use sea_orm::*;
 use uuid::Uuid;
 use chrono::Utc;
 use ::entity::{paste_metadata, paste_content, user_metadata};
-use log::info;
+use tracing::info;
 use migration::{Migrator, MigratorTrait};
 
 pub struct PostgresService {
@@ -13,9 +13,11 @@ impl PostgresService {
     pub async fn new(uri: &str) -> Result<Self, DbErr> {
         info!("Connecting to PostgreSQL...");
         let db = Database::connect(uri).await?;
+        info!("Connected to PostgreSQL.");
+
         info!("Running migrations...");
         Migrator::up(&db, None).await?;
-        info!("Connected to PostgreSQL.");
+
         Ok(Self { db })
     }
 
@@ -34,6 +36,7 @@ impl PostgresService {
     pub async fn put_paste(&self, paste_metadata: paste_metadata::ActiveModel, paste_content: paste_content::ActiveModel) -> Result<(), DbErr> {
         paste_metadata.insert(&self.db).await?;
         paste_content.insert(&self.db).await?;
+
         Ok(())
     }
 
@@ -47,16 +50,19 @@ impl PostgresService {
         
         PasteMetadata::delete_by_id(id_str).exec(&self.db).await?;
         PasteContent::delete_by_id(id_str).exec(&self.db).await?;
+
         Ok(())
     }
 
     pub async fn is_user_banned(&self, ip: &str) -> Result<bool, DbErr> {
         let user = self.get_user(ip).await?;
+
         Ok(user.banned)
     }
 
     pub async fn get_user(&self, ip: &str) -> Result<user_metadata::Model, DbErr> {
         let user = user_metadata::Entity::find_by_id(ip).one(&self.db).await;
+
         if let Ok(Some(user)) = user {
             return Ok(user);
         }

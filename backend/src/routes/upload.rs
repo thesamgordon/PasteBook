@@ -3,7 +3,7 @@ use crate::utils::string::StringUtils;
 use actix_web::{post, web, HttpRequest, HttpResponse};
 use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
-use log::info;
+use tracing::info;
 use sea_orm::IntoActiveModel;
 use entity::{paste_content, paste_metadata};
 use crate::database::postgres_service::PostgresService;

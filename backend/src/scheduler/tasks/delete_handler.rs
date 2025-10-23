@@ -1,42 +1,45 @@
 use std::sync::Arc;
 use std::time::Duration;
+use actix_web::web::Data;
 use chrono::Utc;
-use tokio::spawn;
-use tokio::time::interval;
-use log::{error, trace, debug};
-use crate::database::postgres_service::PostgresService;
+use tracing::{debug, error, trace};
+use migration::async_trait::async_trait;
+use crate::scheduler::ScheduledJob;
+use crate::State;
 
-pub struct DeleteHandler {
-    postgres_service: Arc<PostgresService>,
+pub struct DeleteHandler;
+
+#[async_trait]
+impl ScheduledJob for DeleteHandler {
+    fn name(&self) -> &str {
+        "DeleteHandler"
+    }
+
+    fn interval(&self) -> Duration {
+        Duration::from_secs(600)
+    }
+
+    async fn execute(&self, data: Arc<Data<State>>) -> anyhow::Result<()> {
+        match Self::delete_files(data).await {
+            Ok(_) => {
+                debug!("Deletion process completed successfully.");
+                Ok(())
+            }
+            Err(error) => {
+                error!("Error during deletion process: {}", error);
+
+                Err(anyhow::anyhow!(error))
+            }
+        }
+    }
 }
 
 impl DeleteHandler {
-    pub fn new(postgres_service: Arc<PostgresService>) -> Self {
-        let handler = Self {
-            postgres_service,
-        };
-
-        handler.start_delete_loop();
-        handler
-    }
-
-    pub(crate) fn start_delete_loop(&self) {
-        let postgres_service = Arc::clone(&self.postgres_service);
-
-        spawn(async move {
-            let mut interval = interval(Duration::from_secs(600));
-            loop {
-                interval.tick().await;
-                if let Err(err) = Self::delete_files(&postgres_service).await {
-                    error!("Error during deletion process: {}", err);
-                }
-            }
-        });
-    }
-
     async fn delete_files(
-        postgres_service: &Arc<PostgresService>,
+        data: Arc<Data<State>>,
     ) -> Result<(), String> {
+        let postgres_service = &data.postgres_service;
+
         trace!("Deleting files...");
         let now = Utc::now().timestamp_millis();
         let mut deletable_pastes = Vec::new();
@@ -67,7 +70,7 @@ impl DeleteHandler {
                 debug!("Deleted paste file: {}", id);
             }}
         }
-        
+
         Ok(())
     }
 }

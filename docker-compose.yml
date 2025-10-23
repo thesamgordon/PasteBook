@@ -1,6 +1,6 @@
 services:
   backend:
-    image: ghcr.io/loudbooks/pastebook-backend:latest
+    build: ./backend 
     container_name: pastebook-backend
     restart: always
     environment:
@@ -9,7 +9,7 @@ services:
       - pastebook-network
 
   frontend:
-    image: ghcr.io/loudbooks/pastebook-frontend:latest
+    image: ghcr.io/thesamgordon/pastebook-frontend:latest
     container_name: pastebook-frontend
     restart: always
     environment:
@@ -26,7 +26,7 @@ services:
     pull_policy: always
 
   nginx:
-    image: ghcr.io/loudbooks/pastebook-nginx:latest
+    image: ghcr.io/thesamgordon/pastebook-nginx:latest
     container_name: pastebook-nginx
     depends_on:
       - backend
