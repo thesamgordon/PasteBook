@@ -8,7 +8,7 @@ An easy on the eyes, portable, lightning fast pastebin written in Svelte and Rus
 The following is a guide to get PasteBook running on your system under your domain with SSL. All of this was tested on Ubuntu Linux, and [Docker](https://docker.com) is required.
 
 ### Preparation
-- Download `docker-compose.yml` [here](https://github.com/Loudbooks/PasteBook/blob/master/docker-compose.yml).
+- Download `docker-compose.yml` [here](https://github.com/thesamgordon/PasteBook/blob/master/docker-compose.yml).
 
 ### Configuration
 > [!CAUTION]
@@ -56,7 +56,7 @@ Navigate to `/etc/nginx/sites-enabled`.
 You will need to create a DNS A record pointing to your machine. I use CloudFlare.
 
 ### Configuration 
-Download `pastebook.conf` [here](https://github.com/Loudbooks/PasteBook/blob/master/pastebook.conf) and place it in `/etc/nginx/sites-enabled`.
+Download `pastebook.conf` [here](https://github.com/thesamgordon/PasteBook/blob/master/pastebook.conf) and place it in `/etc/nginx/sites-enabled`.
 
 `<DOMAIN>` - Change this to your domain name. For example, mine is `pastebook.dev`.
 
@@ -91,6 +91,6 @@ docker compose up -d
 ```
 
 # Final Notes
-Wow. There was a lot that can go wrong there. If you need help, you can email me at contact@loudbook.dev or find me elsewhere.
+Wow. There was a lot that can go wrong there. If you need help, you can email me at sam@thesamgordon.com or find me elsewhere.
 
 💜
