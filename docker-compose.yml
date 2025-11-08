@@ -1,6 +1,6 @@
 services:
   backend:
-    build: ./backend 
+    image: ghcr.io/thesamgordon/pastebook-backend:latest 
     container_name: pastebook-backend
     restart: always
     environment:
