@@ -5,6 +5,7 @@ use ::entity::{paste_metadata, paste_content, user_metadata};
 use tracing::info;
 use migration::{Migrator, MigratorTrait};
 
+#[derive(Clone)]
 pub struct PostgresService {
     db: DatabaseConnection,
 }

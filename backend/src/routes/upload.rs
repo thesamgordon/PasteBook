@@ -1,16 +1,15 @@
 use crate::utils::ip::IPUtils;
 use crate::utils::string::StringUtils;
 use actix_web::{post, web, HttpRequest, HttpResponse};
-use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tracing::info;
 use sea_orm::IntoActiveModel;
 use entity::{paste_content, paste_metadata};
-use crate::database::postgres_service::PostgresService;
+use crate::State;
 
 #[post("")]
 async fn upload(
-    postgres_service: web::Data<Arc<PostgresService>>,
+    data: web::Data<State>,
     req: HttpRequest,
     body: String
 ) -> HttpResponse {
@@ -86,12 +85,12 @@ async fn upload(
     let active_metadata: paste_metadata::ActiveModel = paste.into_active_model();
     let active_content: paste_content::ActiveModel = paste_content.into_active_model();
     
-    if let Err(e) = postgres_service.put_paste(active_metadata, active_content).await {
+    if let Err(e) = data.postgres_service.put_paste(active_metadata, active_content).await {
         info!("Failed to save to database: {:?}", e);
         return HttpResponse::InternalServerError().body(format!("Failed to save to database: {:?}", e));
     }
 
-    postgres_service.increment_requests(&ip).await.expect("Failed to increment requests");
+    data.postgres_service.increment_requests(&ip).await.expect("Failed to increment requests");
     
     let host_domain = req
         .headers()
