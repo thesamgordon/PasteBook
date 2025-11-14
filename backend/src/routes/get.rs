@@ -2,7 +2,6 @@ use actix_web::{get, web, HttpRequest, HttpResponse, Responder};
 use std::sync::Arc;
 use crate::utils::data::DataUtils;
 use crate::utils::ip::IPUtils;
-use crate::database::postgres_service::PostgresService;
 use crate::models::content_query;
 use crate::State;
 
@@ -55,11 +54,13 @@ async fn get_content(
 
 #[get("/{id}/metadata")]
 async fn get_metadata(
-    postgres_service: web::Data<Arc<PostgresService>>,
+    data: web::Data<State>,
     request: HttpRequest,
     path: web::Path<String>,
 ) -> impl Responder {
     let ip = IPUtils::get_ip_from_request(&request).unwrap_or("Unknown".to_string());
+    let postgres_service = Arc::new(data.postgres_service.clone());
+
     if postgres_service.is_user_banned(&ip).await.expect("Failed to check if user is banned") {
         return HttpResponse::Forbidden().body("Prohibited");
     }
